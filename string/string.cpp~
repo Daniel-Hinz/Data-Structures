@@ -1,0 +1,166 @@
+// Daniel Hinz
+// String.cpp
+// 2/24/2019
+
+#include "string.hpp"
+
+String::String() {
+    for (int i = 0; i < STRING_SIZE; ++i){
+           str[i] = 0;
+    }
+}
+
+String::String(char ch) : String() {
+    for (int i = 0; i < STRING_SIZE; ++i) {
+        str[i] = ch;
+    }      
+}
+
+String::String(const char ch[]) :String() {
+  int count = 0;
+  while (ch[count] != ' '){
+    ++count;
+  }
+  for(int i = 0; i < count; ++i) {
+      str[i] = ch[count - 1 - i];
+  } 
+}
+
+String String::operator+(const String &rhs) const {
+   String rtn;
+   int count = 0;
+   for (int i = 0; i < length(); ++i) {
+      rtn.str[count] = str[i];
+      ++count;
+   }
+   for (int j = 0; j < length(); ++j) {
+      rtn.str[count] = rhs.str[j];
+      ++count;
+   }
+   rtn.str[count+1] = 0;
+   return rtn;
+}
+
+bool String::operator==( const String& rhs) const{
+   if (length() == rhs.length()) {
+      for (int i = 0; i < length(); ++i) {
+         if (str[i] != rhs.str[i]) {
+            return false;
+         }
+      }
+      return true;
+   }
+   return false;
+}
+
+bool operator!=(const String &lhs, const String &rhs) {
+   return !(lhs.operator==(rhs)); 
+}
+
+bool String::operator<(const String &rhs) const {
+   int i = 0; 
+   while ((str[i] != 0) && (str[i] == rhs.str[i])) {
+      ++i;
+   }
+   return str[i] < rhs.str[i];
+}
+
+bool operator>(const String &lhs, const String &rhs){
+   return (rhs < lhs);
+}
+
+bool operator>= (const String &lhs, const String &rhs) {
+   return !(lhs < rhs);
+}
+
+bool operator<= (const String &lhs, const String &rhs) {
+   return !(rhs < lhs);
+}
+
+String &String::operator+=(const String &rhs) {
+   *this = operator+(rhs);
+   return *this;
+}
+
+char &String::operator[](int i) {
+   return str[i];
+}
+
+char String::operator[](int i) const {
+   return str[i];
+}
+
+int String::length() const{
+   int count = 0; 
+   for (int i = 0; i < STRING_SIZE; ++i) {
+      while (str[i] != ' ') {
+         ++count;
+      }
+   }
+   return count;
+}
+
+int String::capacity() const {
+   return STRING_SIZE;
+}
+
+String String::substr(int start, int end) {
+   String substring;
+   for (int i = start; i <= end; ++i) {
+      substring[i] = str[i];
+   }
+   return substring;
+}
+
+int String::findch(int pos, char ch) {
+   for (int i = pos; i < STRING_SIZE; ++i) {
+      if (str[i] == ch) {
+         return i; 
+      }
+   }
+   return -1;
+}
+
+int String::findstr(int pos, const String& s) {
+   for (int i = pos; i < length(); ++i) {
+      if (substr(i, s.length()) == s) {
+         return i;
+      }
+   }
+   return -1;
+}
+
+String operator+(const char lhs[], const String& rhs) {
+   return String(lhs) + rhs;
+}
+
+String operator+(char lhs, const String& rhs) {
+   return String(lhs) + rhs;
+}
+String operator==(const char lhs[], const String& rhs) {
+   return String(lhs) == rhs;
+}
+
+bool operator==(char lhs, const String& rhs) const{
+   return String(lhs) == rhs;
+}
+
+bool operator<(const char lhs[], const String& rhs) {
+   return String(lhs) < rhs;
+}
+
+bool operator<(char lhs, const String& rhs) {
+   return String(lhs) < rhs;
+}
+
+std::ostream& operator<<(std::ostream& out, const String& rhs) {
+   out << rhs;
+   return out;
+}
+
+std::istream& operator>>(std::istream& in, String &s) {
+   in >> s.str;
+   return in;
+}
+
+
